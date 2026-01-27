@@ -6,7 +6,7 @@
 #
 # See LICENSE file in the project root for full license information.
 
-# Modified by nnn according to given task
+# Modified by Rex Odomero Oghenerobo according to given task B
 
 """
 A program that reads reservation data from a file
