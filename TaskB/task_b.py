@@ -23,50 +23,95 @@ Paid: Yes
 Venue: Meeting Room A
 Phone: 0401234567
 Email: anna.virtanen@example.com
-
 """
+
 from datetime import datetime
 
-def print_booker(reservation: list) -> None:
-    """
-    Prints the reservation number
 
-    Parameters:
-     reservation (lst): reservation -> columns separated by |
-    """
+def print_reservation_number(reservation: list) -> None:
+    """Prints the reservation number."""
+    number = int(reservation[0])
+    print(f"Reservation number: {number}")
+
+
+def print_booker(reservation: list) -> None:
+    """Prints the name of the person who made the reservation."""
     booker = reservation[1]
     print(f"Booker: {booker}")
 
+
+def print_date(reservation: list) -> None:
+    """Prints the reservation date in DD.MM.YYYY format."""
+    date = datetime.strptime(reservation[2], "%Y-%m-%d").date()
+    print(f"Date: {date.strftime('%d.%m.%Y')}")
+
+
+def print_start_time(reservation: list) -> None:
+    """Prints the start time in HH.MM format."""
+    time = datetime.strptime(reservation[3], "%H:%M").time()
+    print(f"Start time: {time.strftime('%H.%M')}")
+
+
+def print_hours(reservation: list) -> None:
+    """Prints the number of reserved hours."""
+    hours = int(reservation[4])
+    print(f"Number of hours: {hours}")
+
+
+def print_hourly_rate(reservation: list) -> None:
+    """Prints the hourly rate in European format."""
+    rate = float(reservation[5])
+    print(f"Hourly rate: {str(f'{rate:.2f}').replace('.', ',')} €")
+
+
+def print_total_price(reservation: list) -> None:
+    """Calculates and prints the total price."""
+    hours = int(reservation[4])
+    rate = float(reservation[5])
+    total = hours * rate
+    print(f"Total price: {str(f'{total:.2f}').replace('.', ',')} €")
+
+
+def print_paid(reservation: list) -> None:
+    """Prints whether the reservation is paid."""
+    paid = reservation[6].strip().lower() == "true"
+    print(f"Paid: {'Yes' if paid else 'No'}")
+
+
+def print_venue(reservation: list) -> None:
+    """Prints the reserved venue."""
+    print(f"Venue: {reservation[7]}")
+
+
+def print_phone(reservation: list) -> None:
+    """Prints the phone number."""
+    print(f"Phone: {reservation[8]}")
+
+
+def print_email(reservation: list) -> None:
+    """Prints the email address."""
+    print(f"Email: {reservation[9]}")
+
+
 def main():
-    """
-    Reads reservation data from a file and
-    prints them to the console using functions
-    """
-    # Define the file name directly in the code
+    """Reads reservation data from a file and prints them using functions."""
     reservations = "reservations.txt"
 
-    # Open the file, read it, and split the contents
     with open(reservations, "r", encoding="utf-8") as f:
-        reservation = f.read().strip()
-        reservation = reservation.split('|')
+        reservation = f.read().strip().split('|')
 
-    # Implement the remaining parts following
-    # the function print_booker(reservation)
-    
-    # The functions to be created should perform type conversions
-    # and print according to the sample output
-
-    #print_reservation_number(reservation)
+    print_reservation_number(reservation)
     print_booker(reservation)
-    #print_date(reservation)
-    #print_start_time(reservation)
-    #print_hours(reservation)
-    #print_hourly_rate(reservation)
-    #print_total_price(reservation)
-    #print_paid(reservation)
-    #print_venue(reservation)
-    #print_phone(reservation)
-    #print_email(reservation)
+    print_date(reservation)
+    print_start_time(reservation)
+    print_hours(reservation)
+    print_hourly_rate(reservation)
+    print_total_price(reservation)
+    print_paid(reservation)
+    print_venue(reservation)
+    print_phone(reservation)
+    print_email(reservation)
+
 
 if __name__ == "__main__":
     main()
