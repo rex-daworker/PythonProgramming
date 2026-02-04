@@ -172,16 +172,6 @@ def main():
     """
     reservations = fetch_reservations("reservations.txt")
 
-    # PART A (teacher debugging section)
-    # You remove or comment this out after verifying conversions.
-    print(" | ".join(HEADERS))
-    print("------------------------------------------------------------------------")
-    for reservation in reservations:
-        print(" | ".join(str(x) for x in reservation))
-        data_types = [type(x).__name__ for x in reservation]
-        print(" | ".join(data_types))
-        print("------------------------------------------------------------------------")
-
     # PART B – Required final output
     confirmed_reservations(reservations)
     long_reservations(reservations)
