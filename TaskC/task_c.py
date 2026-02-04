@@ -44,7 +44,8 @@ def convert_reservation_data(reservation: list) -> list:
     Returns:
      converted (list): Converted data types
     """
-    converted = []
+    converted: list = []
+
 
     # 1) reservationId (str -> int)
     converted.append(int(reservation[0]))
@@ -86,8 +87,6 @@ def convert_reservation_data(reservation: list) -> list:
 def fetch_reservations(reservation_file: str) -> list:
     """
     Reads reservations from a file and converts each row.
-
-    You do NOT modify this function.
     """
     reservations = []
     with open(reservation_file, "r", encoding="utf-8") as f:
