@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Ville Heikkiniemi, Luka Hietala, Luukas Kola
+# Copyright (c) 2025 Ville Heikkiniemi
 #
 # This code is licensed under the MIT License.
 # You are free to use, modify, and distribute this code,
@@ -6,10 +6,7 @@
 #
 # See LICENSE file in the project root for full license information.
 
-# Modified by nnn according to given task
-
-# Copyright (c) 2026 ...
-# Modified by Rex Odomero Oghenerobo according to given task
+# Modified by Rex Odomero Oghenerobo according to given task C
 
 """
 A program that prints reservation information according to task requirements.
