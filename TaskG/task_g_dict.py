@@ -23,7 +23,7 @@ int | str | str | str | date | time | int | float | bool | str | datetime
 from datetime import datetime
 
 
-def convert_reservation_data(reservation: list) -> list:
+def convert_reservation_data(reservation: list) -> dict:
     """
     Convert data types to meet program requirements
 
@@ -33,22 +33,23 @@ def convert_reservation_data(reservation: list) -> list:
     Returns:
      converted (list): Converted data types
     """
-    converted = []
-    converted.append(int(reservation[0]))  # reservationId (str -> int)
-    converted.append(str(reservation[1]))  # name (str)
-    converted.append(str(reservation[2]))  # email (str)
-    converted.append(str(reservation[3]))  # phone (str)
-    converted.append(datetime.strptime(reservation[4], "%Y-%m-%d").date())  # reservationDate (date)
-    converted.append(datetime.strptime(reservation[5], "%H:%M").time())  # reservationTime (time)
-    converted.append(int(reservation[6]))  # durationHours (int)
-    converted.append(float(reservation[7]))  # price (float)
-    converted.append(True if reservation[8].strip() == 'True' else False)  # confirmed (bool)
-    converted.append(str(reservation[9]))  # reservedResource (str)
-    converted.append(datetime.strptime(str(reservation[10]).strip(), "%Y-%m-%d %H:%M:%S"))  # createdAt (datetime)
-    return converted
+    # return a dictionary with typed values for clarity
+    return {
+        "reservationId": int(reservation[0]),
+        "name": str(reservation[1]),
+        "email": str(reservation[2]),
+        "phone": str(reservation[3]),
+        "reservationDate": datetime.strptime(reservation[4], "%Y-%m-%d").date(),
+        "reservationTime": datetime.strptime(reservation[5], "%H:%M").time(),
+        "durationHours": int(reservation[6]),
+        "price": float(reservation[7]),
+        "confirmed": True if reservation[8].strip() == 'True' else False,
+        "reservedResource": str(reservation[9]),
+        "createdAt": datetime.strptime(str(reservation[10]).strip(), "%Y-%m-%d %H:%M:%S"),
+    }
 
 
-def fetch_reservations(reservation_file: str) -> list[list]:
+def fetch_reservations(reservation_file: str) -> list[dict]:
     """
     Reads reservations from a file and returns the reservations converted
     You don't need to modify this function!
@@ -59,85 +60,69 @@ def fetch_reservations(reservation_file: str) -> list[list]:
     Returns:
      reservations (list): Read and converted reservations
     """
-    reservations = []
-    reservations.append(
-        [
-            "reservationId",
-            "name",
-            "email",
-            "phone",
-            "reservationDate",
-            "reservationTime",
-            "durationHours",
-            "price",
-            "confirmed",
-            "reservedResource",
-            "createdAt",
-        ]
-    )
+    reservations: list[dict] = []
     with open(reservation_file, "r", encoding="utf-8") as f:
         for line in f:
-            if len(line) > 1:
+            if len(line.strip()) > 0:
                 fields = line.split("|")
                 reservations.append(convert_reservation_data(fields))
     return reservations
 
-def confirmed_reservations(reservations: list[list]) -> None:
+def confirmed_reservations(reservations: list[dict]) -> None:
     """
     Print confirmed reservations
 
     Parameters:
      reservations (list): Reservations
     """
-    for reservation in reservations[1:]:
-        if reservation[8]: # If confirmed
-            print(f'- {reservation[1]}, {reservation[-2]}, {reservation[4].strftime("%d.%m.%Y")} at {reservation[5].strftime("%H.%M")}')
+    for reservation in reservations:
+        if reservation["confirmed"]:
+            print(f'- {reservation["name"]}, {reservation["reservedResource"]}, {reservation["reservationDate"].strftime("%d.%m.%Y")} at {reservation["reservationTime"].strftime("%H.%M")}')
 
-def long_reservations(reservations : list[list]) -> None:
+def long_reservations(reservations : list[dict]) -> None:
     """
     Print long reservations
 
     Parameters:
      reservations (list): Reservations
     """
-    for reservation in reservations[1:]:
-        if reservation[6] >= 3: # If long (3 hours or more)
-            print(f'- {reservation[1]}, {reservation[4].strftime("%d.%m.%Y")} at {reservation[5].strftime("%H.%M")}, duration {reservation[6]} h, {reservation[-2]}')
+    for reservation in reservations:
+        if reservation["durationHours"] >= 3: # If long (3 hours or more)
+            print(f'- {reservation["name"]}, {reservation["reservationDate"].strftime("%d.%m.%Y")} at {reservation["reservationTime"].strftime("%H.%M")}, duration {reservation["durationHours"]} h, {reservation["reservedResource"]}')
 
 
-def confirmation_statuses(reservations: list[list]) -> None:
+def confirmation_statuses(reservations: list[dict]) -> None:
     """
     Print confirmation statuses
 
     Parameters:
      reservations (list): Reservations
     """
-    for reservation in reservations[1:]:
-        name : str = reservation[1]
-        confirmed : bool = reservation[8]
-
+    for reservation in reservations:
+        name: str = reservation["name"]
+        confirmed: bool = reservation["confirmed"]
         print(f'{name} → {"Confirmed" if confirmed else "NOT Confirmed"}')
 
-def confirmation_summary(reservations: list[list]) -> None:
+def confirmation_summary(reservations: list[dict]) -> None:
     """
     Print confirmation summary
 
     Parameters:
      reservations (list): Reservations
     """
-    confirmed : int = len([x for x in reservations[1:] if x[8]])
-    total_data = len(reservations) - 1  # subtract header row
+    confirmed: int = len([x for x in reservations if x["confirmed"]])
+    total_data = len(reservations)
     not_confirmed = total_data - confirmed
     print(f'- Confirmed reservations: {confirmed} pcs\n- Not confirmed reservations: {not_confirmed} pcs')
 
-def total_revenue(reservations: list[list]) -> None:
+def total_revenue(reservations: list[dict]) -> None:
     """
     Print total revenue
 
     Parameters:
      reservations (list): Reservations
     """
-    revenue : float = sum(x[6] * x[7] for x in reservations[1:] if x[8])
+    revenue: float = sum(r["durationHours"] * r["price"] for r in reservations if r["confirmed"])
     print(f'Total revenue from confirmed reservations: {revenue:.2f} €'.replace('.', ','))
 
 def main():
