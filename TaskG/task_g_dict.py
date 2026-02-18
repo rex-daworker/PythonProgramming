@@ -101,7 +101,7 @@ def long_reservations(reservations : list[list]) -> None:
      reservations (list): Reservations
     """
     for reservation in reservations[1:]:
-        if reservation[6] > 3: # If long
+        if reservation[6] >= 3: # If long (3 hours or more)
             print(f'- {reservation[1]}, {reservation[4].strftime("%d.%m.%Y")} at {reservation[5].strftime("%H.%M")}, duration {reservation[6]} h, {reservation[-2]}')
 
 
@@ -126,7 +126,9 @@ def confirmation_summary(reservations: list[list]) -> None:
      reservations (list): Reservations
     """
     confirmed : int = len([x for x in reservations[1:] if x[8]])
-    print(f'- Confirmed reservations: {confirmed} pcs\n- Not confirmed reservations: {len(reservations) - confirmed} pcs')
+    total_data = len(reservations) - 1  # subtract header row
+    not_confirmed = total_data - confirmed
+    print(f'- Confirmed reservations: {confirmed} pcs\n- Not confirmed reservations: {not_confirmed} pcs')
 
 def total_revenue(reservations: list[list]) -> None:
     """
